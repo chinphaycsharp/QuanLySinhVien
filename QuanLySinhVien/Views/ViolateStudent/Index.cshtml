@@ -1,0 +1,55 @@
+﻿@model IEnumerable<QuanLySinhVien.ViewModel.Violate.ViolateViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.idStudent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StudentName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContentViolate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.idStudent)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StudentName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContentViolate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedAt)
+        </td>
+        <td>
+            <button class="btn btn-primary" style=""><a href="/ViolateStudent/EditViolateStudent/@item.Id" style="color:#000000">Sửa</a></button>
+            @Ajax.ActionLink("Xoá", "DeleteEditViolateStudent", new { @id = item.Id }, new AjaxOptions
+               {
+                   Confirm = "Bạn có chắc muốn xóa bản ghi này ?",
+                   OnComplete = "$('#row_" + @item.Id + "').remove()",
+                   HttpMethod = "Delete"
+               }, new { @class = "btn btn-warning" })
+        </td>
+    </tr>
+}
+
+</table>
