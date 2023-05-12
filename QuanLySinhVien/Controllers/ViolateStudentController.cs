@@ -16,10 +16,10 @@ namespace QuanLySinhVien.Controllers
         private readonly StudentService _StudentService;
         private readonly ViolateEmployeeService _violateEmployeeService;
 
-        public ViolateStudentController(StudentService StudentService, ViolateEmployeeService violateEmployeeService)
+        public ViolateStudentController()
         {
-            _StudentService = StudentService;
-            _violateEmployeeService = violateEmployeeService;
+            _StudentService = new StudentService();
+            _violateEmployeeService = new ViolateEmployeeService();
         }
         // GET: Student
         public ActionResult Index(string currentFilter, string searchString, int? page)
@@ -34,10 +34,10 @@ namespace QuanLySinhVien.Controllers
             }
 
             ViewBag.CurrentFilter = searchString;
-            var students = _StudentService.GetStudents();
+            var students = _violateEmployeeService.GetStudentViolates();
             if (!String.IsNullOrEmpty(searchString))
             {
-                students = students.Where(s => s.Name.Contains(searchString)).ToList();
+                students = students.Where(s => s.StudentName.Contains(searchString)).ToList();
             }
             int pageSize = 5;
             int pageNumber = (page ?? 1);
@@ -48,12 +48,14 @@ namespace QuanLySinhVien.Controllers
             return View(students.ToPagedList(pageNumber, pageSize));
         }
 
+        [HttpGet]
         public ActionResult AddViolateStudent()
         {
             SetViewBag_Supplier();
             return View();
         }
 
+        [HttpPost]
         public ActionResult AddViolateStudent(AddViolateViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -71,6 +73,7 @@ namespace QuanLySinhVien.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult EditViolateStudent(int id)
         {
             var violateEmployee = _violateEmployeeService.GetViolateById(id);
@@ -78,6 +81,7 @@ namespace QuanLySinhVien.Controllers
             return View(violateEmployee);
         }
 
+        [HttpPost]
         public ActionResult EditViolateStudent(EditViolateViewModel viewModel)
         {
             if (ModelState.IsValid)

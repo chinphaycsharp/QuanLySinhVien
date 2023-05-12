@@ -1,0 +1,56 @@
+﻿
+@model PagedList.IPagedList<QuanLySinhVien.ViewModel.Violate.ViolateViewModel>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="sub-header">
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+    {
+        <p>
+            Tìm kiếm: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <input type="submit" class="btn btn-info" value="Tìm kiếm" />
+        </p>
+    }
+</div>
+<table class="table">
+    <tr>
+        <th>
+            Mã sinh viên
+        </th>
+        <th>
+            Tên sinh viên
+        </th>
+        <th>
+            Nội dung vi phạm
+        </th>
+        <th>
+            Ngày tạo
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.idStudent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudentName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContentViolate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+        </tr>
+    }
+
+</table>
+Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) trên @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

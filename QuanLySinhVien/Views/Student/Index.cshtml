@@ -1,0 +1,77 @@
+﻿@model PagedList.IPagedList<QuanLySinhVien.Models.Student>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "StudentViolate";
+}
+
+
+
+<div class="sub-header">
+    @using (Html.BeginForm("Index", "Student", FormMethod.Get))
+    {
+        <p>
+            Tìm kiếm: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <input type="submit" class="btn btn-info" value="Tìm kiếm" />
+        </p>
+    }
+<p>
+    <a href="Student/AddStudent" class="btn btn-success">Tạo sinh viên</a>
+</p>
+</div>
+<table class="table">
+    <tr>
+        <th>
+            Mã sinh viên
+        </th>
+        <th>
+            Tên sinh viên
+        </th>
+        <th>
+            Lớp học
+        </th>
+        <th>
+            Nghành học
+        </th>
+        <th>
+            Ngày tạo
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Id)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ClassName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.MajorName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CreatedAt)
+    </td>
+    <td>
+        @Html.ActionLink("Sửa", "EditStudent", new { id = item.Id }, new { @class = "btn btn-primary" })
+        @Ajax.ActionLink("Xoá", "DeleteStudent", new { @id = item.Id }, new AjaxOptions
+   {
+       Confirm = "Bạn có chắc muốn xóa bản ghi này ?",
+       OnComplete = "$('#row_" + @item.Id + "').remove()",
+       HttpMethod = "Delete",
+       OnSuccess = "window.location.reload()"
+   }, new { @class = "btn btn-warning" })
+    </td>
+</tr>
+    }
+</table>
+Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) trên @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+

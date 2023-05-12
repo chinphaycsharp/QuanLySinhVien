@@ -1,61 +1,62 @@
-﻿@model IEnumerable<QuanLySinhVien.Models.Login>
-
+﻿@model PagedList.IPagedList<QuanLySinhVien.Models.Login>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "GetAllAccounts";
 }
 
-<h2>GetAllAccounts</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<div class="sub-header">
+    @using (Html.BeginForm("GetAllAccounts", "Home", FormMethod.Get))
+    {
+        <p>
+            Tìm kiếm: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <input type="submit" class="btn btn-info" value="Tìm kiếm" />
+        </p>
+    }
+    <p>
+        <a href="AddAccount" class="btn btn-success">Tạo tài khoản</a>
+    </p>
+</div>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.UserName)
+            Tài khoản
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PassWord)
+            Email
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdatedAt)
+            Ngày tạo
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PassWord)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdatedAt)
-        </td>
-        <td>
-            @Html.ActionLink("Sửa", "Edit", new { id = item.Id }) |
-            @Ajax.ActionLink("Xoá", "Delete", new { @id = item.Id }, new AjaxOptions
-                                       {
-                                           Confirm = "Bạn có chắc muốn xóa bản ghi này ?",
-                                           OnComplete = "$('#row_" + @item.Id + "').remove()",
-                                           HttpMethod = "Delete"
-                                       }, new { @class = "btn btn-warning" })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.ActionLink("Sửa", "EditAccount", new { id = item.Id }, new { @class = "btn btn-primary" }) 
+                @Ajax.ActionLink("Xoá", "DeleteAccount","Home", new { @id = item.Id }, new AjaxOptions
+           {
+               Confirm = "Bạn có chắc muốn xóa bản ghi này ?",
+               OnComplete = "$('#row_" + @item.Id + "').remove()",
+               HttpMethod = "Delete",
+               OnSuccess = "window.location.reload()"
+           }, new { @class = "btn btn-warning" })
+            </td>
+        </tr>
+    }
 
 </table>
+Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) trên @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("GetAllAccounts",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

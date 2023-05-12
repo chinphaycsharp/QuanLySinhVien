@@ -10,13 +10,26 @@ namespace QuanLySinhVien.ViewModel.Student
     {
         [Required(ErrorMessage = "Bạn chưa nhập trường này")]
         [StringLength(255)]
+        public string Id { get; set; }
+        [Required(ErrorMessage = "Bạn chưa nhập trường này")]
+        [StringLength(255)]
         public string Name { get; set; }
 
-        public DateTime BirthDay { get; set; }
+        [Required(ErrorMessage = "Bạn chưa nhập trường này")]
+        [StringLength(255)]
+        public string Phone { get; set; }
 
         [Required(ErrorMessage = "Bạn chưa nhập trường này")]
-        [StringLength(100)]
+        [StringLength(255)]
         public string Address { get; set; }
+
+        [Required(ErrorMessage = "Bạn chưa nhập trường này")]
+        [StringLength(255)]
+        public string Email { get; set; }
+
+
+        public DateTime BirthDay { get; set; }
+        public string BirthDayStr { get; set; }
 
         [Required(ErrorMessage = "Bạn chưa nhập trường này")]
         [StringLength(10)]

@@ -10,9 +10,9 @@ namespace QuanLySinhVien.Controllers
     {
         private readonly LoginService _loginService;
 
-        public LoginController(LoginService loginService)
+        public LoginController()
         {
-            _loginService = loginService;
+            _loginService = new LoginService();
         }
 
         // GET: Login

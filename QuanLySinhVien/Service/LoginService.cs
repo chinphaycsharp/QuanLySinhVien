@@ -19,7 +19,8 @@ namespace QuanLySinhVien.Service
 
         public Login CheckLogin(string username, string password)
         {
-            var account = _dbContext.Logins.Where(x=>x.UserName == username && x.PassWord == EncryptionHelper.ToMD5(password)).FirstOrDefault();
+            password = EncryptionHelper.ToMD5(password);
+            var account = _dbContext.Logins.Where(x=>x.UserName == username && x.PassWord == password).FirstOrDefault();
             if(account == null) 
             {
                 return null;
@@ -46,7 +47,7 @@ namespace QuanLySinhVien.Service
                 UserName = viewModel.UserName,
                 PassWord = EncryptionHelper.ToMD5(viewModel.PassWord),
                 Email = viewModel.Email,
-                CreatedAt = viewModel.CreatedAt
+                CreatedAt = DateTime.Now
             };
 
             try

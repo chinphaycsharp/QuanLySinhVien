@@ -11,18 +11,18 @@ using System.Web.Mvc;
 
 namespace QuanLySinhVien.Controllers
 {
-    public class StudentController : Controller
+    public class StudentController : BaseController
     {
         private readonly StudentService _studentService;
         private readonly ViolateEmployeeService _violateEmployeeService;
 
-        public StudentController(StudentService studentService, ViolateEmployeeService violateEmployeeService)
+        public StudentController()
         {
-            _studentService = studentService;
-            _violateEmployeeService = violateEmployeeService;
+            _studentService = new StudentService();
+            _violateEmployeeService = new ViolateEmployeeService ();
         }
 
-        public ActionResult StudentViolate(string currentFilter, string searchString, int? page)
+        public ActionResult Index(string currentFilter, string searchString, int? page)
         {
             if (searchString != null)
             {
@@ -34,10 +34,10 @@ namespace QuanLySinhVien.Controllers
             }
 
             ViewBag.CurrentFilter = searchString;
-            var students = _violateEmployeeService.GetStudentViolates();
+            var students = _studentService.GetStudents();
             if (!String.IsNullOrEmpty(searchString))
             {
-                students = students.Where(s => s.idStudent.Contains(searchString)).ToList();
+                students = students.Where(s => s.Id.Contains(searchString)).ToList();
             }
             int pageSize = 5;
             int pageNumber = (page ?? 1);
@@ -48,11 +48,13 @@ namespace QuanLySinhVien.Controllers
             return View(students.ToPagedList(pageNumber, pageSize));
         }
 
+        [HttpGet]
         public ActionResult AddStudent()
         {
             return View();
         }
 
+        [HttpPost]
         public ActionResult AddStudent(AddStudentViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -60,7 +62,7 @@ namespace QuanLySinhVien.Controllers
                 int result = _studentService.AddStudent(viewModel);
                 if (result > 0)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Student");
                 }
                 else
                 {
@@ -70,12 +72,14 @@ namespace QuanLySinhVien.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult EditStudent(string id)
         {
             var account = _studentService.GetStudentById(id);
             return View(account);
         }
 
+        [HttpPost]
         public ActionResult EditStudent(EditStudentViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -83,7 +87,7 @@ namespace QuanLySinhVien.Controllers
                 int result = _studentService.UpdateStudent(viewModel);
                 if (result > 0)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Student");
                 }
                 else
                 {
@@ -99,7 +103,7 @@ namespace QuanLySinhVien.Controllers
             int result = _studentService.DeleteStudent(id);
             if (result > 0)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Student");
             }
             return View();
         }

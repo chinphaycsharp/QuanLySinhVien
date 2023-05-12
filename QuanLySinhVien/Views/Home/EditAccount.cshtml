@@ -4,9 +4,9 @@
     ViewBag.Title = "EditAccount";
 }
 
-<h2>EditAccount</h2>
+<h2>Sửa tài khoản</h2>
 
-@using (Html.BeginForm())
+@using ((Html.BeginForm("EditAccount", "Home", FormMethod.Post)))
 {
     @Html.AntiForgeryToken()
     
@@ -39,15 +39,13 @@
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        <br />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <a href="GetAllAccounts" value="Create" class="btn btn-primary">Trở lại</a>
+                <input type="submit" value="Lưu" class="btn btn-success" />
             </div>
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

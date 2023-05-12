@@ -26,11 +26,19 @@ namespace QuanLySinhVien.Service
         {
             try
             {
+                string[] date = new string[3];
+                if(viewModel.BirthDayStr != null)
+                {
+                    date = viewModel.BirthDayStr.Split('/');
+                }
                 Student student = new Student()
                 {
+                    Id = viewModel.Id,
                     Address = viewModel.Address,
                     Name = viewModel.Name,
-                    BirthDay = viewModel.BirthDay,
+                    Phone = viewModel.Phone,
+                    Email = viewModel.Email,
+                    BirthDay = new DateTime(Convert.ToInt32(date[date.Length - 1]), Convert.ToInt32(date[date.Length - 2]), Convert.ToInt32(date[date.Length - 3])),
                     ClassName = viewModel.ClassName,
                     MajorName = viewModel.MajorName,
                     CreatedAt = viewModel.CreatedAt
@@ -64,6 +72,7 @@ namespace QuanLySinhVien.Service
         {
             try
             {
+                
                 var result = _dbContext.Students.FirstOrDefault(x => x.Id == viewModel.Id);
                 result.Name = viewModel.Name;
                 result.Address = viewModel.Address;
